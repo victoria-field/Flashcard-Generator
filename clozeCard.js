@@ -6,7 +6,7 @@ function ClozeCard(text, cloze){
 
 function ClozeCardPrototype(){
   this.clozeRemoved = function(){
-    return ${this.tet[0]} ... ${this.text[1]};
+    return `${this.text[0]} ... ${this.text[1]}`;
   };
 };
 
