@@ -2,7 +2,7 @@ var inquirer = require("inquirer");
 var BasicCard = require("./BasicCard.js");
 var ClozeCard = require("./ClozeCard.js");
 var fs = require("fs");
-var library = require("./cardLibrary.json");
+var library = require("./cardLibrary.txt");
 
 var drawnCard;
 var playedCard;
@@ -100,7 +100,7 @@ function createCard() {
                     back: cardData.back
                 };
                 library.push(cardObj);
-                fs.writeFile("cardLibrary.json", JSON.stringify(library, null, 2));
+                fs.writeFile("cardLibrary.txt", JSON.stringify(library, null, 2));
                 inquirer.prompt([
                     {
                         type: "list",
@@ -141,7 +141,7 @@ function createCard() {
                 };
                 if (cardObj.text.indexOf(cardObj.cloze) !== -1) {
                     library.push(cardObj);
-                    fs.writeFile("cardLibrary.json", JSON.stringify(library, null, 2));
+                    fs.writeFile("cardLibrary.txt", JSON.stringify(library, null, 2));
                 } else {
                     console.log("Sorry, The cloze must match some word(s) in the text of your statement.");
 
@@ -166,14 +166,14 @@ function createCard() {
 
     });
 };
-//function used to get the question from the drawnCard in the askQuestions function
+
 function getQuestion(card) {
-    if (card.type === "BasicCard") {						//If the cards type is "BasicCard" then....
-        drawnCard = new BasicCard(card.front, card.back);	//drawnCard becomes a new instance of BasicCard constuctor with its front and back passed in
-        return drawnCard.front;								//Return the front of the card (the questions side)
-    } else if (card.type === "ClozeCard") {					//If the card type is "Cloze Card" then...
-        drawnCard = new ClozeCard(card.text, card.cloze)	//drawnCard becomes a new instance of ClozeCard constuctor with its text and cloze passed in
-        return drawnCard.clozeRemoved();					//Return the ClozeCard prototpe method clozeRemoved to show the question missing the cloze
+    if (card.type === "BasicCard") {
+        drawnCard = new BasicCard(card.front, card.back);
+        return drawnCard.front;
+    } else if (card.type === "ClozeCard") {
+        drawnCard = new ClozeCard(card.text, card.cloze)
+        return drawnCard.clozeRemoved();
     }
 };
 
@@ -194,9 +194,9 @@ function askQuestions() {
             } else {
             	//check to see if current card is Cloze or Basic
                 if (drawnCard.front !== undefined) { //if card has a front then it is a Basic card
-                    console.log("Sorry, the correct answer was ") + library[count].back + "."; //grabs & shows correct answer
+                    console.log("Sorry, the correct answer was " + library[count].back + "."); //grabs & shows correct answer
                 } else { // otherwise it is a Cloze card
-                    console.log("Sorry, the correct answer was ") + library[count].cloze + ".";//grabs & shows correct answer
+                    console.log("Sorry, the correct answer was " + library[count].cloze + ".");//grabs & shows correct answer
                 }
             }
             count++; 		//increase the counter for the next run through
@@ -219,17 +219,17 @@ function shuffleDeck() {
 
       newDeck[i] = shuffled;
   }
-  fs.writeFile("cardLibrary.json", JSON.stringify(newDeck, null, 2)); //write the new randomized array over the old one
+  fs.writeFile("cardLibrary.txt", JSON.stringify(newDeck, null, 2)); //write the new randomized array over the old one
   console.log("The deck of flashcards have been shuffled");
-  //setTimeout(openMenu, 1000);  //*** shuffle only works on app reload, look into how to apply it in-app
+
 }
 
 //function to ask question from a random card
 function randomCard() {
   var randomNumber = Math.floor(Math.random() * (library.length - 1));  // get a random index number within the length of the current library
 
-  playedCard = getQuestion(library[randomNumber]);	//playedCard stores the question from the card with index equal to the randomNumber.
-        inquirer.prompt([							//inquirer used to ask the question from the playedCard.
+  playedCard = getQuestion(library[randomNumber]);
+        inquirer.prompt([
             {
                 type: "input",
                 message: playedCard,
@@ -243,10 +243,10 @@ function randomCard() {
             } else {
             	//check to see if rando card is Cloze or Basic
                 if (drawnCard.front !== undefined) { //if card has a front then it is a Basic card
-                    console.log("Sorry, the correct answer was ") + library[randomNumber].back + "."; //grabs & shows correct answer
+                    console.log("Sorry, the correct answer was " + library[randomNumber].back + "."); //grabs & shows correct answer
                     setTimeout(openMenu, 1000);
                 } else { // otherwise it is a Cloze card
-                    console.log("Sorry, the correct answer was ") + library[randomNumber].cloze + ".";//grabs & shows correct answer
+                    console.log("Sorry, the correct answer was " + library[randomNumber].cloze + ".");//grabs & shows correct answer
                     setTimeout(openMenu, 1000);
                 }
             }
@@ -256,8 +256,6 @@ function randomCard() {
 
 //function to print all cards on screen for user to read through
 function showCards () {
-
-  var library = require("./cardLibrary.json");
 
   if (count < library.length) {                     //if counter stays below the length of the library array
     //currentCard = getQuestion(library[count]);      //currentCard variable becomes
